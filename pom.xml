@@ -12,6 +12,8 @@
         <module>Module01</module>
         <module>Module02</module>
         <module>Module03</module>
+        <module>Module04</module>
+        <module>Module04</module>
     </modules>
 
     <properties>
@@ -81,6 +83,40 @@
             <artifactId>jboss-vfs</artifactId>
             <version>3.2.16.Final</version>
         </dependency>
+        <!-- spring-aspects会帮我们传递过来aspectjweaver -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
+        </dependency>
+
+        <!-- ServletAPI -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Spring5和Thymeleaf整合包 -->
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>3.0.12.RELEASE</version>
+        </dependency>
+
+        <!-- 基于Maven依赖传递性，导入spring-context依赖即可导入当前所需所有jar包 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+
     </dependencies>
 
 </project>

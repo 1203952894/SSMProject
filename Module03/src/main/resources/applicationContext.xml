@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--引入 jdbc.properties 资源文件-->
     <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
@@ -21,4 +22,6 @@
     <bean id="calculatorLog01" class="xyz.ccola.impl.CalculatorLogImpl"/>
     <bean id="calculatorStaticProxy01" class="xyz.ccola.staticProxy.CalculatorStaticProxy"/>
 
+    <!--开启AspectJ的自动代理，为目标对象自动生成代理-->
+    <aop:aspectj-autoproxy/>
 </beans>

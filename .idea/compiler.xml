@@ -10,6 +10,7 @@
         <module name="Module02" />
         <module name="Module03" />
         <module name="Module01" />
+        <module name="Module04" />
       </profile>
     </annotationProcessing>
   </component>

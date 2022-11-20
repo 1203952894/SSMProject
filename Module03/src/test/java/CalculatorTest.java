@@ -78,4 +78,14 @@ public class CalculatorTest {
     }
 
 
+    /**
+     * 测试 Aspect
+     */
+    @Test
+    public void aspectProxyTest() {
+        ClassPathXmlApplicationContext context = ApplicationContextUtil.getClassPathXmlApplicationContext();
+        Calculator calculatorPureImpl = (Calculator) context.getBean("calculatorPureImpl");
+        calculatorPureImpl.add(1, 1);
+        log.info("方法 aspectProxyTest 测试通过");
+    }
 }
