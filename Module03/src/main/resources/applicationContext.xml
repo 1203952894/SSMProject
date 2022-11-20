@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--引入 jdbc.properties 资源文件-->
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+    <!--配置 Bean-->
+    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置扫描方式 最基本的扫描方式-->
+    <context:component-scan base-package="xyz.ccola"/>
+
+    <bean id="calculatorSimple01" class="xyz.ccola.impl.CalculatorSimpleImpl"/>
+    <bean id="calculatorLog01" class="xyz.ccola.impl.CalculatorLogImpl"/>
+    <bean id="calculatorStaticProxy01" class="xyz.ccola.staticProxy.CalculatorStaticProxy"/>
+
+</beans>

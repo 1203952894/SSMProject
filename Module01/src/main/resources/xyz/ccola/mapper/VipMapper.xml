@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.ccola.mapper.VipMapper">
+
+    <!--查询全部 Vip 信息
+    List<Vip> selectAllVips();
+    -->
+    <select id="selectAllVips" resultType="xyz.ccola.pojo.Vip">
+        select *
+        from table_vip
+    </select>
+
+    <!--根据 vipId 查询信息
+    通过自定义 Map 查询全部用户信息 方式 3 分步查询 第二步
+    List<Vip> selectAllVips();
+    -->
+    <select id="selectVipByvipId" resultType="xyz.ccola.pojo.Vip">
+        select *
+        from table_vip
+        where vip_id = #{vipId}
+    </select>
+
+    <!--通过自定义 Map 查询全部  Vip 信息 方式 3 分步查询 第一步
+    List<Vip> findAllVipByResultMapWay03Step01();
+    -->
+    <resultMap id="findAllVipByResultMapWay03Step01Map" type="Vip">
+        <result column="vip_id" property="vipId"></result>
+        <result column="vip_name" property="vipName"></result>
+        <collection property="users" fetchType="eager" select="xyz.ccola.mapper.UserMapper.selectUserByvipId"
+                    column="vip_id">
+
+        </collection>
+    </resultMap>
+    <select id="findAllVipByResultMapWay03Step01" resultMap="findAllVipByResultMapWay03Step01Map">
+        select *
+        from table_vip
+    </select>
+</mapper>

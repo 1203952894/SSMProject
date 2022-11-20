@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--引入 properties文件-->
+    <properties resource="jdbc.properties"/>
+    <!--配置 MyBatis 运行时行为-->
+    <settings>
+        <!--是否开启自动驼峰命名规则映射-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--是否开启缓存-->
+        <setting name="cacheEnabled" value="false"/>
+        <!--是否开启延迟加载，如果开启所有关联的对象都会延迟加载-->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <!--是否开启关联对象属性的延迟加载，如果开启，对任意延迟属性的调用都会使带有延迟
+        属性的对象完整加载，否则每种属性按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+    <!--类型别名-->
+    <typeAliases>
+        <package name="xyz.ccola.pojo"/>
+    </typeAliases>
+    <!--配置插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+    </plugins>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--引入MyBatis映射文件-->
+    <mappers>
+        <package name="xyz.ccola.mapper"/>
+    </mappers>
+</configuration>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--引入 jdbc.properties 资源文件-->
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+    <!--配置 Bean-->
+    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置HelloWorld所对应的bean，即将HelloWorld的对象交给Spring的IOC容器管理-->
+    <bean id="helloWorld01" class="xyz.ccola.bean.HelloWorld"/>
+
+
+    <!--使用 setter 注入-->
+    <bean id="Student01" class="xyz.ccola.bean.Student">
+        <property name="id" value="1"/>
+        <property name="name" value="Cola"/>
+        <property name="age" value="21"/>
+    </bean>
+
+    <!--特殊值 null 小于号 「<」 的处理-->
+    <bean id="Student02" class="xyz.ccola.bean.Student">
+        <property name="id" value="2"/>
+        <property name="name">
+            <null/>
+        </property>
+        <property name="age" value="21"/>
+    </bean>
+
+    <bean id="Student03" class="xyz.ccola.bean.Student">
+        <property name="id" value="3"/>
+        <property name="name" value="a&lt;b"/>
+        <property name="age" value="21"/>
+    </bean>
+
+    <bean id="Student04" class="xyz.ccola.bean.Student">
+        <property name="id" value="4"/>
+        <property name="name">
+            <value><![CDATA[a<b]]></value>
+        </property>
+        <property name="age" value="21"/>
+    </bean>
+
+    <bean id="Clazz01" class="xyz.ccola.bean.Clazz">
+        <property name="clazzId" value="1"/>
+        <property name="clazzName" value="109 班"/>
+    </bean>
+
+    <!--通过外部 Bean 为类属性赋值-->
+    <bean id="Student05" class="xyz.ccola.bean.Student">
+        <property name="id" value="5"/>
+        <property name="name" value="Cola"/>
+        <property name="age" value="21"/>
+        <property name="clazz" ref="Clazz01"/>
+    </bean>
+
+    <!--通过内部 Bean 为类属性赋值-->
+    <bean id="Student06" class="xyz.ccola.bean.Student">
+        <property name="id" value="6"/>
+        <property name="name" value="Cola"/>
+        <property name="age" value="21"/>
+        <property name="clazz">
+            <bean class="xyz.ccola.bean.Clazz">
+                <property name="clazzId" value="1"/>
+                <property name="clazzName" value="109 班"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--通过级联方式为类属性赋值-->
+    <bean id="Student07" class="xyz.ccola.bean.Student">
+        <property name="id" value="7"/>
+        <property name="name" value="Cola"/>
+        <property name="age" value="21"/>
+        <property name="clazz" ref="Clazz01"/>
+        <property name="clazz.clazzId" value="1"/>
+        <property name="clazz.clazzName" value="109 班"/>
+    </bean>
+
+    <!--为数组类型属性赋值-->
+    <bean id="Student08" class="xyz.ccola.bean.Student">
+        <property name="id" value="8"/>
+        <property name="name" value="Cola"/>
+        <property name="age" value="21"/>
+        <property name="hobbies">
+            <array>
+                <value>Music</value>
+                <value>Game</value>
+            </array>
+        </property>
+        <property name="clazz" ref="Clazz01"/>
+    </bean>
+
+    <!--为集合类型属性赋值-->
+    <bean id="Clazz02" class="xyz.ccola.bean.Clazz">
+        <property name="clazzId" value="2"/>
+        <property name="clazzName" value="109 班"/>
+        <property name="students">
+            <list>
+                <ref bean="Student05"/>
+                <ref bean="Student06"/>
+                <ref bean="Student07"/>
+                <ref bean="Student08"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--为Map类型属性赋值-->
+    <bean id="Teacher01" class="xyz.ccola.bean.Teacher">
+        <property name="teacherId" value="1"/>
+        <property name="teacherName" value="语文"/>
+    </bean>
+    <bean id="Teacher02" class="xyz.ccola.bean.Teacher">
+        <property name="teacherId" value="2"/>
+        <property name="teacherName" value="数学"/>
+    </bean>
+
+    <bean id="Student09" class="xyz.ccola.bean.Student">
+        <property name="id" value="9"/>
+        <property name="name" value="Cola"/>
+        <property name="age" value="21"/>
+        <property name="hobbies">
+            <array>
+                <value>Music</value>
+                <value>Game</value>
+            </array>
+        </property>
+        <property name="clazz" ref="Clazz01"/>
+        <property name="teachers">
+            <map>
+                <entry>
+                    <key>
+                        <value>1</value>
+                    </key>
+                    <ref bean="Teacher01"/>
+                </entry>
+                <entry>
+                    <key>
+                        <value>2</value>
+                    </key>
+                    <ref bean="Teacher02"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <!--使用构造器注入-->
+    <bean id="Student10" class="xyz.ccola.bean.Student">
+        <constructor-arg value="1"/>
+        <constructor-arg value="Cola"/>
+        <constructor-arg value="21"/>
+        <constructor-arg>
+            <array>
+                <value>Music</value>
+                <value>Game</value>
+            </array>
+        </constructor-arg>
+        <constructor-arg ref="Clazz01"/>
+        <constructor-arg>
+            <map>
+                <entry>
+                    <key>
+                        <value>1</value>
+                    </key>
+                    <ref bean="Teacher01"></ref>
+                </entry>
+                <entry>
+                    <key>
+                        <value>2</value>
+                    </key>
+                    <ref bean="Teacher02"></ref>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean name="User01" class="xyz.ccola.bean.User" scope="singleton">
+        <property name="id" value="1"></property>
+        <property name="username" value="Cola"></property>
+        <property name="password" value="XiaoEr"></property>
+        <property name="age" value="21"></property>
+    </bean>
+
+    <bean name="User02" class="xyz.ccola.bean.User" scope="prototype">
+        <property name="id" value="2"></property>
+        <property name="username" value="XiaoEr"></property>
+        <property name="password" value="UNKnow"></property>
+        <property name="age" value="21"></property>
+    </bean>
+
+    <bean name="User03" class="xyz.ccola.bean.User" scope="singleton"
+          init-method="initMethod" destroy-method="destroyMethod">
+        <property name="id" value="2"></property>
+        <property name="username" value="XiaoEr"></property>
+        <property name="password" value="UNKnow"></property>
+        <property name="age" value="21"></property>
+    </bean>
+
+    <!-- <bean id="myBeanProcessor" class="xyz.ccola.beanProcessor.MyBeanProcessor"></bean>-->
+
+    <bean id="UserFactoryBean01" class="xyz.ccola.factoryBean.UserFactoryBean"/>
+
+
+    <!--基于 XML 的自动装配之 byName-->
+    <bean id="TeacherController01" class="xyz.ccola.controller.TeacherController" autowire="byName"/>
+    <bean id="teacherService" class="xyz.ccola.impl.TeacherServiceImpl" autowire="byName"/>
+    <bean id="teacherDao" class="xyz.ccola.impl.TeacherDaoImpl"/>
+
+    <!--基于 XML 的自动装配之 byType-->
+    <bean id="UserController01" class="xyz.ccola.controller.UserController" autowire="byType"/>
+    <bean id="userService01" class="xyz.ccola.impl.UserServiceImpl" autowire="byType"/>
+    <bean id="userDao01" class="xyz.ccola.impl.UserDaoImpl"/>
+
+
+    <!--配置扫描方式 最基本的扫描方式-->
+    <context:component-scan base-package="xyz.ccola"/>
+
+
+</beans>

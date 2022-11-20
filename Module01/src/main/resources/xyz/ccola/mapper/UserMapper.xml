@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.ccola.mapper.UserMapper">
+
+    <!--查询全部用户信息
+    List<User> selectAllUsers();
+    -->
+    <select id="selectAllUsers" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+    </select>
+
+    <!--新增用户
+    Integer insertUser(User user);
+    -->
+    <insert id="insertUser">
+        insert into table_user
+        values (#{id}, #{username}, #{age}, #{vipId});
+    </insert>
+
+    <!--删除用户
+    Integer deleteUser(@Param("id") Integer id);
+    -->
+    <delete id="deleteUser">
+        DELETE
+        from table_user
+        where id = #{id}
+    </delete>
+
+    <!--修改用户
+    Integer modifyUser(@Param("id") Integer id,@Param("user") User user);
+    -->
+    <update id="modifyUser" parameterType="User">
+        update table_user
+        set id=#{user.id},
+            username=#{user.username},
+            age=#{user.age},
+            vip_id=#{user.vipId}
+        where id = #{id}
+    </update>
+
+    <!--查询单个用户信息
+    List<User> showOneUserInfo(@Param("id") Integer id);
+    -->
+    <select id="showOneUserInfo" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+        where id = #{id}
+    </select>
+
+    <!--询全部用户的信息
+    List<User> showAllUsersInfo();
+    -->
+    <select id="showAllUsersInfo" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+    </select>
+
+    <!--通过 Id 和 Age 查询用户信息
+    List<User> selectUserByIdAndAge(Integer id,Integer age);
+    -->
+    <select id="selectUserByIdAndAge" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+        where id = #{arg0}
+          and age = #{arg1}
+    </select>
+
+    <!--通过 Id 和 UserName 查询用户信息
+    List<User> selectUserByIdAndUserName(Map<String,String> map);
+    -->
+    <select id="selectUserByIdAndUserName" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+        where id = #{id}
+          and username = #{username}
+    </select>
+
+    <!--查询用户的总记录数
+    Integer getCount();
+    -->
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(id)
+        from table_user
+    </select>
+
+    <!--根据 Id 查询用户并存入 Map 集合中
+    Map<String,User> selectUserToMapById(@Param("id") Integer id);
+    -->
+    <select id="selectUserToMapById" resultType="java.util.Map">
+        select *
+        from table_user
+        where id = #{id}
+    </select>
+
+    <!--根据 Id 查询用户并存入 Map 集合中
+    Map<String,Object> selectUserToMap();
+    -->
+    <select id="selectUserToMap" resultType="java.util.Map">
+        select *
+        from table_user
+    </select>
+
+    <!--根据 username 模糊查询
+    List<User> fuzzyFind(@Param("like") String like);
+    -->
+    <select id="fuzzyFind" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+        where username like '%${like}%'
+    </select>
+
+    <!--批量删除
+    Integer bulkDeletion(@Param("ids") String ids);
+    -->
+    <delete id="bulkDeletion">
+        DELETE
+        from table_user
+        where id in (${ids})
+    </delete>
+
+    <!--从指定表中获取信息
+    List<User> showAllFromDesignateTable(@Param("tableName") String tableName);
+    -->
+    <select id="showAllFromDesignateTable" resultType="xyz.ccola.pojo.User">
+        select *
+        from ${tableName}
+    </select>
+
+
+    <!--通过自定义 Map 查询全部用户信息 方式 1 级联方式
+    List<User> findAllUserByResultMapWay01();
+    -->
+    <resultMap id="findAllUserByResultMapWay01Map" type="User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="age" property="age"/>
+        <result column="vip_id" property="vipId"/>
+        <result column="vip_id" property="vip.vipId"/>
+        <result column="vip_name" property="vip.vipName"/>
+    </resultMap>
+    <select id="findAllUserByResultMapWay01" resultMap="findAllUserByResultMapWay01Map">
+        select *
+        from table_user
+                 left join table_vip on table_user.vip_id = table_vip.vip_id
+    </select>
+
+    <!--通过自定义 Map 查询全部用户信息 方式 2 使用 association 标签
+    List<User> findAllUserByResultMapWay02();
+    -->
+    <resultMap id="findAllUserByResultMapWay02Map" type="User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="age" property="age"/>
+        <result column="vip_id" property="vipId"/>
+        <association property="vip" javaType="Vip">
+            <id column="vip_id" property="vipId"/>
+            <result column="vip_name" property="vipName"/>
+        </association>
+    </resultMap>
+    <select id="findAllUserByResultMapWay02" resultMap="findAllUserByResultMapWay02Map">
+        select *
+        from table_user
+                 left join table_vip on table_user.vip_id = table_vip.vip_id
+    </select>
+
+    <!--通过自定义 Map 查询全部用户信息 方式 3 分步查询 第一步
+    List<User> findAllUserByResultMapWay03Step01();
+    -->
+    <resultMap id="findAllUserByResultMapWay03Step01Map" type="User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="age" property="age"/>
+        <result column="vip_id" property="vipId"/>
+        <association property="vip" select="xyz.ccola.mapper.VipMapper.selectVipByvipId" column="vip_id">
+
+        </association>
+    </resultMap>
+    <select id="findAllUserByResultMapWay03Step01" resultMap="findAllUserByResultMapWay03Step01Map">
+        select *
+        from table_user
+    </select>
+
+    <!--根据 vipId 查询用户信息
+    List<User> selectUserByvipId(@Param("vipId") Integer vipId);
+    -->
+    <select id="selectUserByvipId" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+        where vip_id = #{vipId}
+    </select>
+
+    <!--分页查找全部用户信息
+    List<User> selectAllUsersByPage();
+    -->
+    <select id="selectAllUsersByPage" resultType="xyz.ccola.pojo.User">
+        select *
+        from table_user
+    </select>
+</mapper>
